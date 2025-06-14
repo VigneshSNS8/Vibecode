@@ -12,7 +12,7 @@ if 'submissions' not in st.session_state:
     st.session_state.submissions = []
 
 # Webhook URL (replace with your actual webhook URL)
-WEBHOOK_URL = "https://vignesh8492.app.n8n.cloud/webhook-test/registration"
+WEBHOOK_URL = "https://vignesh8492.app.n8n.cloud/webhook-test/https://vibecode-2ddrhjbwkhadznzmruffxe.streamlit.app/"
 
 # Create form
 with st.form(key="registration_form"):
