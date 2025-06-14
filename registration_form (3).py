@@ -1,7 +1,10 @@
-import streamlit as st
+ import streamlit as st
 import re
 import requests
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
+import smtplib
+from email.message import EmailMessage
+import os
 
 st.set_page_config(page_title="Vibe Code Fest Registration", page_icon=":computer:", layout="centered")
 
@@ -12,7 +15,51 @@ if 'submissions' not in st.session_state:
     st.session_state.submissions = []
 
 # Webhook URL (replace with your actual webhook URL)
-WEBHOOK_URL = "https://vignesh8492.app.n8n.cloud/webhook-test/https://vibecode-2ddrhjbwkhadznzmruffxe.streamlit.app/"
+WEBHOOK_URL = "https://vignesh8492.app.n8n.cloud/webhook-test/registration"
+
+# SMTP configuration for sending emails (load from environment variables)
+SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
+SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
+SMTP_USER = os.getenv("SMTP_USER", "your-email@gmail.com")
+SMTP_PASS = os.getenv("SMTP_PASS", "your-app-password")
+
+# Function to send reminder email
+def send_reminder_email(email, name, event_date):
+    msg = EmailMessage()
+    msg.set_content(f"""
+Dear {name},
+
+This is a reminder for your participation in Vibe Code Fest on {event_date}.
+Please ensure you arrive on time and bring any necessary materials.
+For any questions, contact us at support@vibecodefest.com.
+
+Best regards,
+Vibe Code Fest Team
+""")
+    msg["Subject"] = "Vibe Code Fest Reminder: Event Tomorrow"
+    msg["From"] = SMTP_USER
+    msg["To"] = email
+
+    try:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+            server.starttls()
+            server.login(SMTP_USER, SMTP_PASS)
+            server.send_message(msg)
+        return True
+    except Exception as e:
+        st.error(f"Failed to send reminder to {email}: {str(e)}")
+        return False
+
+# Check for reminders (run on app load)
+today = date.today()
+tomorrow = today + timedelta(days=1)
+for submission in st.session_state.submissions:
+    event_date = datetime.strptime(submission["Event Date"], "%Y-%m-%d").date()
+    if event_date == tomorrow:
+        email = submission["Email ID"]
+        name = submission["Name"]
+        if send_reminder_email(email, name, submission["Event Date"]):
+            st.success(f"Reminder email sent to {email} for event on {submission['Event Date']}.")
 
 # Create form
 with st.form(key="registration_form"):
