@@ -15,7 +15,7 @@ if 'submissions' not in st.session_state:
     st.session_state.submissions = []
 
 # Webhook URL (replace with your actual webhook URL)
-WEBHOOK_URL = "https://vignesh8492.app.n8n.cloud/webhook-test/registration"
+WEBHOOK_URL = "https://vignesh8492.app.n8n.cloud/webhook-test/https://vibecode-2ddrhjbwkhadznzmruffxe.streamlit.app/"
 
 # SMTP configuration for sending emails (load from environment variables)
 SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
