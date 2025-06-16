@@ -10,7 +10,7 @@ st.title("Lecture Session Feedback Form")
 st.write("Please provide your feedback for the lecture session.")
 
 # Webhook URL (replace with your actual webhook URL)
-WEBHOOK_URL = "https://vignesh8492.app.n8n.cloud/webhook-test/https://feedback-rfyolsubhttkzwrlffmt4g.streamlit.app/"
+WEBHOOK_URL = "https://vignesh8492.app.n8n.cloud/webhook/https://feedback-rfyolsubhttkzwrlffmt4g.streamlit.app/"
 
 # Initialize session state for form submission
 if 'submitted' not in st.session_state:
