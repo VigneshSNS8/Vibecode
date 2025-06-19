@@ -1,15 +1,15 @@
 import streamlit as st
 from datetime import datetime
+import requests
 
 # ========== Header with Logo ==========
-st.image("https://www.bing.com/th?id=OIP.N0Boxtyrfky73SS1LbG4sQHaDD", width=200)  # Replace this link with your actual SNS logo if stored locally or hosted
-# Title
+st.image("https://www.bing.com/th?id=OIP.N0Boxtyrfky73SS1LbG4sQHaDD", width=200)
 st.title(" Event Registration Form")
 
-# Webhook URL (replace with your actual webhook URL)
+# ========== Webhook URL ==========
 WEBHOOK_URL = "https://vignesh8492.app.n8n.cloud/webhook-test/https://snseventbooking.streamlit.app/"
 
-# Function to validate inputs
+# ========== Validation Function ==========
 def validate_form(name, institution, event_name, organizer, event_date, time_slot):
     errors = []
     if not name.strip():
@@ -26,7 +26,7 @@ def validate_form(name, institution, event_name, organizer, event_date, time_slo
         errors.append("Time Slot is required.")
     return errors
 
-# Form Inputs
+# ========== Streamlit Form ==========
 with st.form("registration_form"):
     name = st.text_input("👤 Participant's Name")
     institution = st.selectbox("🏫 Institution", ["Select", "SNS iHub", "DT Team"])
@@ -37,27 +37,43 @@ with st.form("registration_form"):
     predefined_slots = ["10:00 AM - 12:00 PM", "01:00 PM - 03:00 PM", "03:00 PM - 05:00 PM", "Custom"]
     slot_choice = st.selectbox("🕒 Choose a Time Slot", predefined_slots)
     
-    time_slot = ""
-    if slot_choice == "Custom":
-        time_slot = st.text_input("✏️ Enter Custom Time Slot")
-    else:
-        time_slot = slot_choice
+    time_slot = st.text_input("✏️ Enter Custom Time Slot") if slot_choice == "Custom" else slot_choice
 
     submitted = st.form_submit_button("Register")
 
     if submitted:
-        # Validate
-        errors = validate_form(name, institution if institution != "Select" else "", event_name, organizer, event_date, time_slot)
-        
+        selected_institution = institution if institution != "Select" else ""
+        errors = validate_form(name, selected_institution, event_name, organizer, event_date, time_slot)
+
         if errors:
             for error in errors:
                 st.error(error)
         else:
-            st.success("✅ Registration Successful!")
+            # Prepare data for webhook
+            payload = {
+                "name": name,
+                "institution": selected_institution,
+                "event_name": event_name,
+                "organizer": organizer,
+                "event_date": event_date.strftime("%Y-%m-%d"),
+                "time_slot": time_slot
+            }
+
+            try:
+                response = requests.post(WEBHOOK_URL, json=payload, timeout=10)
+                if response.status_code == 200:
+                    st.success("✅ Registration Successful! Data sent to the system.")
+                else:
+                    st.warning(f"⚠️ Registered, but webhook returned status code {response.status_code}")
+            except Exception as e:
+                st.error(f"❌ Registration failed to send to webhook: {e}")
+
+            # Display summary
             st.write("### Registration Details")
             st.write(f"**Name:** {name}")
-            st.write(f"**Institution:** {institution}")
+            st.write(f"**Institution:** {selected_institution}")
             st.write(f"**Event Name:** {event_name}")
             st.write(f"**Organizer:** {organizer}")
             st.write(f"**Date:** {event_date.strftime('%Y-%m-%d')}")
             st.write(f"**Time Slot:** {time_slot}")
+
