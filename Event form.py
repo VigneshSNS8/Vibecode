@@ -53,7 +53,6 @@ with st.form("registration_form"):
         else:
             # Prepare data for webhook
             payload = {
-                "name": name,
                 "institution": selected_institution,
                 "event_name": event_name,
                 "organizer": organizer,
