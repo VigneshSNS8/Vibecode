@@ -30,7 +30,6 @@ def validate_form(institution, event_name, organizer, email_id, event_date, time
 with st.form("registration_form"):
     st.subheader("📝 Please fill out the form below")
     
-    name = st.text_input("👤 Participant's Name")
     institution = st.selectbox("🏫 Institution", ["Select", "SNS iHub", "DT Team"])
     event_name = st.text_input("🎯 Event Name")
     organizer = st.text_input("👨‍💼 Event Organizer's Name")
