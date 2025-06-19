@@ -6,6 +6,9 @@ st.image("https://www.bing.com/th?id=OIP.N0Boxtyrfky73SS1LbG4sQHaDD", width=200)
 # Title
 st.title(" Event Registration Form")
 
+# Webhook URL (replace with your actual webhook URL)
+WEBHOOK_URL = "https://vignesh8492.app.n8n.cloud/webhook-test/https://snseventbooking.streamlit.app/"
+
 # Function to validate inputs
 def validate_form(name, institution, event_name, organizer, event_date, time_slot):
     errors = []
