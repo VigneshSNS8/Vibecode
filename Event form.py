@@ -2,7 +2,7 @@ import streamlit as st
 from datetime import datetime
 
 # ========== Header with Logo ==========
-st.image("https://www.bing.com/th?id=OIP.N0Boxtyrfky73SS1LbG4sQHaDD", width=150)  # Replace this link with your actual SNS logo if stored locally or hosted
+st.image("https://www.bing.com/th?id=OIP.N0Boxtyrfky73SS1LbG4sQHaDD", width=200)  # Replace this link with your actual SNS logo if stored locally or hosted
 # Title
 st.title(" Event Registration Form")
 
