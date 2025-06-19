@@ -1,0 +1,63 @@
+import streamlit as st
+from datetime import datetime
+
+# Title
+st.title("🎫 Event Registration Form")
+
+# Form start
+with st.form("event_registration_form"):
+    st.subheader("Fill in your details")
+
+    # Input fields
+    name = st.text_input("Participant's Name")
+    institution = st.selectbox("Select Institution", ["", "SNS iHub", "DT Team"])
+    event_name = st.text_input("Event Name")
+    organizer_name = st.text_input("Event Organizer's Name")
+    event_date = st.date_input("Event Date", min_value=datetime.today())
+
+    # Time Slot options
+    time_slots = [
+        "9:00 AM - 10:00 AM",
+        "10:00 AM - 11:00 AM",
+        "2:00 PM - 3:00 PM",
+        "Other (Custom Input)"
+    ]
+    time_slot_choice = st.selectbox("Select Time Slot", time_slots)
+
+    custom_time = ""
+    if time_slot_choice == "Other (Custom Input)":
+        custom_time = st.text_input("Enter Custom Time Slot")
+
+    # Submit button
+    submit = st.form_submit_button("Register")
+
+    # Validation
+    if submit:
+        errors = []
+
+        if not name.strip():
+            errors.append("Participant's Name is required.")
+        if not institution:
+            errors.append("Please select an institution.")
+        if not event_name.strip():
+            errors.append("Event Name is required.")
+        if not organizer_name.strip():
+            errors.append("Event Organizer's Name is required.")
+        if time_slot_choice == "Other (Custom Input)" and not custom_time.strip():
+            errors.append("Custom time slot is required.")
+
+        if errors:
+            st.error("Please fix the following errors:")
+            for err in errors:
+                st.write(f"❌ {err}")
+        else:
+            # Display submitted data
+            final_time_slot = custom_time if time_slot_choice == "Other (Custom Input)" else time_slot_choice
+            st.success("✅ Registration Successful!")
+            st.write("### Submitted Details")
+            st.write(f"👤 **Name:** {name}")
+            st.write(f"🏫 **Institution:** {institution}")
+            st.write(f"🎉 **Event Name:** {event_name}")
+            st.write(f"🧑‍💼 **Organizer:** {organizer_name}")
+            st.write(f"📅 **Date:** {event_date.strftime('%Y-%m-%d')}")
+            st.write(f"🕒 **Time Slot:** {final_time_slot}")
