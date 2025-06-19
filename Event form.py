@@ -2,7 +2,7 @@ import streamlit as st
 from datetime import datetime
 
 # Title
-st.title("🎉 Event Registration Form")
+st.title("https://www.snsgroups.com/sns.png Event Registration Form")
 
 # Function to validate inputs
 def validate_form(name, institution, event_name, organizer, event_date, time_slot):
